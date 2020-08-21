@@ -12,7 +12,7 @@ Implementation utilizes a target network to guide learning in the right directio
     - conda create --name reinforcement_learning
     - conda activate reinforcement_learning
     ```
-Install the following in your Anaconda environment:
+Install the following in your newly created Anaconda environment:
 - Tensorflow Version 1.15
 - OpenAI Gym
 - NumPy
