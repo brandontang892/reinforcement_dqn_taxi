@@ -7,7 +7,7 @@ Implementation utilizes a target network to guide learning in the right directio
 
 ### Prerequisites
 
-- Create new environment in Anaconda: conda 
+- Create new environment in Anaconda:  
     ```
     - conda create --name reinforcement_learning
     - conda activate reinforcement_learning
