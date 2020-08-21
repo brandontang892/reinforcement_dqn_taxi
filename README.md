@@ -5,6 +5,36 @@ Implementation utilizes a target network to guide learning in the right directio
 
 **Notes:** Empircally, running the DQN model with multiple passes (saving weights from previous pass and running model again initialized with those weights) leads to better performance because the exploration/exploitation epsilon constant is allowed to re-decay, effectively helping the agent escape from local "traps" and not get stuck during training. Essentially, the agent gets to pick up from where it ended in the last pass, except with a fresh pair of eyes.
 
+### Prerequisites
+
+- Create new environment in Anaconda: conda 
+    ```
+    - conda create --name reinforcement_learning
+    - conda activate reinforcement_learning
+    ```
+Install the following in your Anaconda environment:
+- Tensorflow Version 1.15
+- OpenAI Gym
+- NumPy
+- tqdm
+```
+pip install tensorflow==1.15
+pip install gym
+pip install numpy
+pip install tqdm
+```
+
+## Running the DQN Agent
+
+To train the agent, cd into the root project directory and type "python DQNAgent_Taxi.py" in the command terminal. The model will automatically save its weights when a certain threshold of performance is reached.
+
+To render/display the agent interacting with the environment, set **SHOW_PREVIEW** to **True** and set **AGGREGATE_STATS_EVERY** to **1** to see rendering for every timestep. 
+
+To see training visualizations on Tensorboard, you should type something like **tensorboard --logdir=taxi-1597569936/** in the terminal. taxi-1597569936 should be replaced by the name of the folder in the log folder.
+
+Then, just copy the link that the terminal gives you into your browser. If this link doesn't work, try searching http://localhost:6006/ 
+
+
 **Description of OpenAI Taxi Domain:**
 
     +---------+
