@@ -3,11 +3,17 @@ Deep Q-Learning (DQN) for OpenAI Taxi Domain.
 
 Implementation utilizes a target network to guide learning in the right direction and takes advantage of experience replay to prevent state transition dependencies from interfering with learning. The Markov Decision Process and overall environment are defined/provided by OpenAI. Tensorboard was integrated into this project for training/progress visualizations.
 
-Notes:
+**Notes:** Empircally, running the DQN model with multiple passes (saving weights from previous pass and running model again initialized with those weights) leads to better performance because the exploration/exploitation epsilon constant is allowed to re-decay, effectively helping the agent escape from local "traps" and not get stuck during training. Essentially, the agent gets to pick up from where it ended in the last pass, except with a fresh pair of eyes.
 
-Empircally, running the DQN model with multiple passes (saving weights from previous pass and running model again initialized with those weights) leads to better performance because the exploration/exploitation epsilon constant is allowed to re-decay, effectively helping the agent escape from local "traps" and not get stuck during training. Essentially, the agent gets to pick up from where it ended in the last pass, except with a fresh pair of eyes.
+**Description of OpenAI Taxi Domain:**
 
-Description of OpenAI Taxi Domain:
+    "+---------+",
+    "|R: | : :G|",
+    "| : | : : |",
+    "| : : : : |",
+    "| | : | : |",
+    "|Y| : |B: |",
+    "+---------+",
 
 There are four designated locations in the grid world indicated by R(ed), G(reen), Y(ellow), and B(lue). When the episode starts, the taxi starts off at a random square and the passenger is at a random location. The taxi drives to the passenger's location, picks up the passenger, drives to the passenger's destination (another one of the four specified locations), and then drops off the passenger. Once the passenger is dropped off, the episode ends.
 
