@@ -1,8 +1,3 @@
-#To run this, you need Tensorflow version==1.15. Type "python DQNAgent_Taxi.py" in the terminal to train the agent. The model will automatically save its weights when a certain threshold of performance is reached.
-#To render/display the agent interacting with the environment, set SHOW_PREVIEW to True and set AGGREGATE_STATS_EVERY to 1 to see rendering for every timestep. 
-#To see training visualizations on Tensorboard, you should type something like "tensorboard --logdir=taxi-1597569936/" in the terminal. taxi-1597569936 should be replaced by the name of the folder in the log folder.
-#Then, just copy the link that the terminal gives you into your browser. If this link doesn't work, try searching http://localhost:6006/ 
-
 import numpy as np
 import tensorflow as tf
 from keras.models import Sequential
@@ -14,8 +9,6 @@ import time
 import random
 from tqdm import tqdm
 import os
-from PIL import Image
-import cv2
 import gym 
 
 DISCOUNT = 0.99
