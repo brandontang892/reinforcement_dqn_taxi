@@ -21,55 +21,53 @@ import gym
 DISCOUNT = 0.99
 REPLAY_MEMORY_SIZE = 50_000  # How many last steps to keep for model training
 MIN_REPLAY_MEMORY_SIZE = 1_000  # Minimum number of steps in a memory to start training
-MINIBATCH_SIZE = 64  # How many steps (samples) to use for training
+MINIBATCH_SIZE = 64  # number of steps (samples) to use for training
 UPDATE_TARGET_EVERY = 5  # Terminal states (end of episodes)
 MODEL_NAME = 'taxi'
-MIN_REWARD = 0  # For model save
-AVG_REWARD = -5 # For model save
+MIN_REWARD = -300  # For model save: change this to be higher for the later passes
+AVG_REWARD = -200 # For model save: change this to be higher for the later passes
 MEMORY_FRACTION = 0.20
 
 # Environment settings
 EPISODES = 20_000
 
 # Exploration settings
-epsilon = 1  # not a constant, going to be decayed
-EPSILON_DECAY = 0.99975
-MIN_EPSILON = 0.001
+epsilon = 1  # exploration/exploitation term: will be decayed
+EPSILON_DECAY = 0.99975	# decay rate
+MIN_EPSILON = 0.001	#smallest that epsilon can be
 
 #  Stats settings
-AGGREGATE_STATS_EVERY = 50  # episodes
-SHOW_PREVIEW = False
-
+AGGREGATE_STATS_EVERY = 50  
+SHOW_PREVIEW = False	# To render the environment and visually see the agent train/interact, set this to True
 ACTION_SPACE_SIZE = 6
-env = gym.make('Taxi-v3')
+
+env = gym.make('Taxi-v3')	#import taxi domain environment from OpenAI Gym
 
 # For stats
-ep_rewards = []
+ep_rewards = [-200]
 
 # For more repetitive results
 random.seed(1)
 np.random.seed(1)
 tf.set_random_seed(1)
 
-# Memory fraction, used mostly when training multiple agents
-#gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=MEMORY_FRACTION)
-#backend.set_session(tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)))
-
 # Create models folder
 if not os.path.isdir('models'):
 	os.makedirs('models')
-
+	
+# Create logs folder
+if not os.path.isdir('logs'):
+	os.makedirs('logs')
 
 # Own Tensorboard class
 class ModifiedTensorBoard(TensorBoard):
-
-	# Overriding init to set initial step and writer (we want one log file for all .fit() calls)
+	# Overriding init to set initial step and writer (one log file for all .fit() calls)
 	def __init__(self, **kwargs):
 		super().__init__(**kwargs)
 		self.step = 1
 		self.writer = tf.summary.FileWriter(self.log_dir)
 
-	# Overriding this method to stop creating default log writer
+	# Overriding to stop creating default log writer
 	def set_model(self, model):
 		pass
 
@@ -78,12 +76,11 @@ class ModifiedTensorBoard(TensorBoard):
 	def on_epoch_end(self, epoch, logs=None):
 		self.update_stats(**logs)
 
-	# Overrided
 	# We train for one batch only, no need to save anything at epoch end
 	def on_batch_end(self, batch, logs=None):
 		pass
 
-	# Overrided, so won't close writer
+	# Overrided, do not close writer
 	def on_train_end(self, _):
 		pass
 
@@ -102,7 +99,7 @@ class DQNAgent:
 		self.target_model = self.create_model()
 		self.target_model.set_weights(self.model.get_weights())
 
-		# An array with last n steps for training
+		# An array with last 50_000 steps for training to sample our training batch from
 		self.replay_memory = deque(maxlen=REPLAY_MEMORY_SIZE)
 
 		# Custom tensorboard object
@@ -113,7 +110,7 @@ class DQNAgent:
 
 	def create_model(self):
 		model = Sequential()
-		model.add(Embedding(500, 10, input_length=1))
+		model.add(Embedding(500, 10, input_length=1))	#env.step(action) for the taxi domain returns an single integer for the resultant state that represents one of 500 possible states. Input length is 1.
 		model.add(Reshape((10,)))
 		model.add(Dense(50, activation='relu'))
 		model.add(Dense(50, activation='relu'))
@@ -133,10 +130,10 @@ class DQNAgent:
 			return
 		minibatch = random.sample(self.replay_memory, MINIBATCH_SIZE)
 
-		current_states = np.array([transition[0] for transition in minibatch])/255
+		current_states = np.array([transition[0] for transition in minibatch])/500	# Normalize
 		current_qs_list = self.model.predict(current_states)
 
-		new_current_states = np.array([transition[3] for transition in minibatch])/255
+		new_current_states = np.array([transition[3] for transition in minibatch])/500	# Normalize
 		future_qs_list = self.target_model.predict(new_current_states)
 
 		X = []	#feature sets (iamges from the game)
@@ -156,7 +153,7 @@ class DQNAgent:
 			X.append(current_state)
 			y.append(current_qs)
 
-		self.model.fit(np.array(X)/255, np.array(y), batch_size = MINIBATCH_SIZE, verbose=0, 
+		self.model.fit(np.array(X)/500, np.array(y), batch_size = MINIBATCH_SIZE, verbose=0, 
 					   shuffle=False, callbacks=[self.tensorboard] if terminal_state else None)
 
 		#updating to determine if we want to update target_model yet
@@ -206,8 +203,8 @@ for episode in tqdm(range(1, EPISODES+1), ascii=True, unit="episode"):
 		max_reward = max(ep_rewards[-AGGREGATE_STATS_EVERY:])
 		agent.tensorboard.update_stats(reward_avg=average_reward, reward_min=min_reward, reward_max=max_reward, epsilon=epsilon)
 
-		# Save model, but only when min reward is greater or equal a set value
-		if average_reward >= AVG_REWARD:
+		# Save model, but only when average reward is greater or equal a set value or min reward is greater or equal a set value
+		if average_reward >= AVG_REWARD or min_reward >= MIN_REWARD:
 			agent.model.save(f'models/{MODEL_NAME}__{max_reward:_>7.2f}max_{average_reward:_>7.2f}avg_{min_reward:_>7.2f}min__{int(time.time())}.model')
 
 	# Decay epsilon
