@@ -1,7 +1,7 @@
 # reinforce_dqn_taxi
 Deep Q-Learning (DQN) for OpenAI Taxi Domain.
 
-Implementation utilizes a target network to guide learning in the right direction and takes advantage of experience replay to remove state transition dependencies. The Markov Decision Process and overall environment are defined/provided by OpenAI.
+Implementation utilizes a target network to guide learning in the right direction and takes advantage of experience replay to prevent state transition dependencies from interfering with learning. The Markov Decision Process and overall environment are defined/provided by OpenAI.
 
 Notes:
 
