@@ -1,3 +1,8 @@
+#To run this, you need Tensorflow version==1.15. Type "python DQNAgent_Taxi.py" in the terminal to train the agent. The model will automatically save its weights when a certain threshold of performance is reached.
+#To render/display the agent interacting with the environment, set SHOW_PREVIEW to True and set AGGREGATE_STATS_EVERY to 1 to see rendering for every timestep. 
+#To see training visualizations on Tensorboard, you should type something like "tensorboard --logdir=taxi-1597569936/" in the terminal. taxi-1597569936 should be replaced by the name of the folder in the log folder.
+#Then, just copy the link that the terminal gives you into your browser. If this link doesn't work, try searching http://localhost:6006/ 
+
 import numpy as np
 import tensorflow as tf
 from keras.models import Sequential
@@ -18,8 +23,9 @@ REPLAY_MEMORY_SIZE = 50_000  # How many last steps to keep for model training
 MIN_REPLAY_MEMORY_SIZE = 1_000  # Minimum number of steps in a memory to start training
 MINIBATCH_SIZE = 64  # How many steps (samples) to use for training
 UPDATE_TARGET_EVERY = 5  # Terminal states (end of episodes)
-MODEL_NAME = '2x256'
-MIN_REWARD = -200  # For model save
+MODEL_NAME = 'taxi'
+MIN_REWARD = 0  # For model save
+AVG_REWARD = -5 # For model save
 MEMORY_FRACTION = 0.20
 
 # Environment settings
@@ -35,17 +41,17 @@ AGGREGATE_STATS_EVERY = 50  # episodes
 SHOW_PREVIEW = False
 
 ACTION_SPACE_SIZE = 6
-env = gym.make('Taxi-v2')
+env = gym.make('Taxi-v3')
 
 # For stats
-ep_rewards = [-200]
+ep_rewards = []
 
 # For more repetitive results
 random.seed(1)
 np.random.seed(1)
 tf.set_random_seed(1)
 
-# Memory fraction, used mostly when trai8ning multiple agents
+# Memory fraction, used mostly when training multiple agents
 #gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=MEMORY_FRACTION)
 #backend.set_session(tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)))
 
@@ -201,7 +207,7 @@ for episode in tqdm(range(1, EPISODES+1), ascii=True, unit="episode"):
 		agent.tensorboard.update_stats(reward_avg=average_reward, reward_min=min_reward, reward_max=max_reward, epsilon=epsilon)
 
 		# Save model, but only when min reward is greater or equal a set value
-		if min_reward >= MIN_REWARD:
+		if average_reward >= AVG_REWARD:
 			agent.model.save(f'models/{MODEL_NAME}__{max_reward:_>7.2f}max_{average_reward:_>7.2f}avg_{min_reward:_>7.2f}min__{int(time.time())}.model')
 
 	# Decay epsilon
