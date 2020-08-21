@@ -7,13 +7,13 @@ Implementation utilizes a target network to guide learning in the right directio
 
 **Description of OpenAI Taxi Domain:**
 
-    "+---------+",
-    "|R: | : :G|",
-    "| : | : : |",
-    "| : : : : |",
-    "| | : | : |",
-    "|Y| : |B: |",
-    "+---------+",
+    +---------+
+    |R: | : :G|
+    | : | : : |
+    | : : : : |
+    | | : | : |
+    |Y| : |B: |
+    +---------+
 
 There are four designated locations in the grid world indicated by R(ed), G(reen), Y(ellow), and B(lue). When the episode starts, the taxi starts off at a random square and the passenger is at a random location. The taxi drives to the passenger's location, picks up the passenger, drives to the passenger's destination (another one of the four specified locations), and then drops off the passenger. Once the passenger is dropped off, the episode ends.
 
