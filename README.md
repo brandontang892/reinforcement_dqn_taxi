@@ -5,7 +5,7 @@ Implementation utilizes a target network to guide learning in the right directio
 
 **Notes:** Empircally, running the DQN model with multiple passes (saving weights from previous pass and running model again initialized with those weights) leads to better performance because the exploration/exploitation epsilon constant is allowed to re-decay, effectively helping the agent escape from local "traps" and not get stuck during training. Essentially, the agent gets to pick up from where it ended in the last pass, except with a fresh pair of eyes.
 
-### Prerequisites
+## Prerequisites
 
 - Create new environment in Anaconda:  
     ```
@@ -35,7 +35,7 @@ To see training visualizations on Tensorboard, you should type something like **
 Then, just copy the link that the terminal gives you into your browser. If this link doesn't work, try searching http://localhost:6006/ 
 
 
-**Description of OpenAI Taxi Domain:**
+## Description of OpenAI Taxi Domain:
 
     +---------+
     |R: | : :G|
