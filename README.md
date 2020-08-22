@@ -14,13 +14,19 @@ conda activate reinforcement_learning
 ```
 Install the following in your newly created Anaconda environment:
 - Tensorflow Version 1.15
-- OpenAI Gym
-- NumPy
-- tqdm
 ```
 pip install tensorflow==1.15
+```
+- OpenAI Gym
+```
 pip install gym
+```
+- NumPy
+```
 pip install numpy
+```
+- tqdm
+```
 pip install tqdm
 ```
 
