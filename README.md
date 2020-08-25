@@ -1,7 +1,7 @@
 # reinforce_dqn_taxi
-Deep Q-Learning (DQN) for OpenAI Taxi Domain.
+Double Deep Q-Learning (DQN) for OpenAI Taxi Domain.
 
-Implementation utilizes a target network to guide learning in the right direction and takes advantage of experience replay to prevent state transition dependencies from interfering with learning. The Markov Decision Process (MDP) and overall environment are defined/provided by OpenAI. Tensorboard was integrated into this project for training/progress visualizations.
+Implementation utilizes a double target network to guide learning in the right direction and takes advantage of random sampling experience replay to prevent state transition dependencies from interfering with learning. The Markov Decision Process (MDP) and overall environment are defined/provided by OpenAI. Tensorboard was integrated into this project for training/progress visualizations. 
 
 **Notes:** Empirically, running the DQN model with multiple passes (saving weights from previous pass and running model again initialized with those weights) leads to better performance because the exploration/exploitation epsilon constant is allowed to re-decay, effectively helping the agent escape from local "traps" and not get stuck during training. Essentially, the agent gets to pick up from where it ended in the last pass, except with a fresh pair of eyes.
 
