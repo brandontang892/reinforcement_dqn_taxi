@@ -5,6 +5,8 @@ Implementation utilizes a double target network to guide learning in the right d
 
 **Notes:** Empirically, running the DQN model with multiple passes (saving weights from previous pass and running model again initialized with those weights) leads to better performance because the exploration/exploitation epsilon constant is allowed to re-decay, effectively helping the agent escape from local "traps" and not get stuck during training. Essentially, the agent gets to pick up from where it ended in the last pass, except with a fresh pair of eyes.
 
+**To-Do:** Decode the state (single integer value) into its constituent parts for more information and context when inputing the state to the deep learning model; this will boost the model's performance when trying to predict accurate Q values.
+
 ## Prerequisites
 
 - Create new environment in Anaconda:  
